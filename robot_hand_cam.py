@@ -3,7 +3,7 @@ import mediapipe as mp
 import serial
 import time
 
-ser=serial.Serial('/dev/ttyUSB0',115200)
+ser=serial.Serial('/dev/ttyACM0',115200)
 
 
 mp_drawing = mp.solutions.drawing_utils
@@ -17,8 +17,7 @@ x_diff = 0
 cap = cv2.VideoCapture(0)
 with mp_hands.Hands(
     min_detection_confidence=0.9,
-    min_tracking_confidence=0.9, 
-    max_num_hands = 1) as hands:
+    min_tracking_confidence=0.9) as hands:
   direction = -1  
   while cap.isOpened():
     success, image = cap.read()
@@ -36,7 +35,7 @@ with mp_hands.Hands(
     
     image.flags.writeable = True
     image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
-    fingers = [0, 0, 0, 0, 0, 0]
+    fingers = [0, 0, 0, 0, 0, 1]
     if results.multi_hand_landmarks:
       for hand_landmarks in results.multi_hand_landmarks:
         
@@ -65,13 +64,18 @@ with mp_hands.Hands(
         x9, y9 = hand_landmarks.landmark[20].x, hand_landmarks.landmark[20].y
         
         x_diff = x8 - x2
-        if x_diff < 0:
-  
-            fingers[0] = 1 if y9 > y8 else 0
-            fingers[1] = 1 if y7 > y6 else 0
+        if x_diff > 0:
+            fingers[0] = 1 if x1 > x2 else 0
+            fingers[1] = 1 if y3 > y2 else 0
             fingers[2] = 1 if y5 > y4 else 0
-            fingers[3] = 1 if y3 > y2 else 0
-            fingers[4] = 1 if x2 > x1 else 0
+            fingers[3] = 1 if y7 > y6 else 0
+            fingers[4] = 1 if y9 > y8 else 0
+        else:
+            fingers[4] = 1 if y9 > y8 else 0
+            fingers[3] = 1 if y7 > y6 else 0
+            fingers[2] = 1 if y5 > y4 else 0
+            fingers[1] = 1 if y3 > y2 else 0
+            fingers[0] = 1 if x2 > x1 else 0
 
         mp_drawing.draw_landmarks(
             image,
@@ -88,7 +92,7 @@ with mp_hands.Hands(
     if cv2.waitKey(1) ==ord('q'):
       break
 
-    time.sleep(0.002)
+    time.sleep(0.005)
 
 cap.release()
 cv2.destroyAllWindows()
