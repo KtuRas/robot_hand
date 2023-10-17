@@ -3,13 +3,14 @@ import mediapipe as mp
 import serial
 import time
 
-ser=serial.Serial('/dev/ttyACM0',115200)
-
+try:
+  ser=serial.Serial('/dev/ttyUSB0',115200)
+except:
+  ser=serial.Serial('COM6',115200)
 
 mp_drawing = mp.solutions.drawing_utils
 mp_drawing_styles = mp.solutions.drawing_styles
 mp_hands = mp.solutions.hands
-
 
 x_diff = 0
 
