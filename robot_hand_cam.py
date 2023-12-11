@@ -93,7 +93,7 @@ with mp_hands.Hands(
     if cv2.waitKey(1) ==ord('q'):
       break
 
-    time.sleep(0.005)
+    time.sleep(0.01)
 
 cap.release()
 cv2.destroyAllWindows()

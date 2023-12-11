@@ -18,7 +18,7 @@ int i1,i2,i3,i4,i5,i6;
 
 void setup() {
   Serial.begin(115200);
-  Serial.setTimeout(5);
+  Serial.setTimeout(10);
 
   thumb.attach(3);
   index.attach(5);
@@ -38,16 +38,7 @@ void setup() {
 }
 
 void loop() {
-  //wrist.write(90);
   if (Serial.available()){
-    digitalWrite(A0,LOW);
-    digitalWrite(A1,LOW);
-    digitalWrite(A2,LOW);
-    digitalWrite(A3,LOW);
-    digitalWrite(A4,LOW);
-    digitalWrite(A5,LOW);
-    digitalWrite(7,LOW);
-    digitalWrite(8,LOW);
     
     fingers=Serial.readString();
     
@@ -72,6 +63,7 @@ void loop() {
       digitalWrite(7,HIGH);
     } else {
       thumb.write(0);
+      digitalWrite(7,LOW);
     }
 
     if (i2) {
@@ -79,6 +71,7 @@ void loop() {
       digitalWrite(A5,HIGH);
     } else {
       index.write(180);
+      digitalWrite(A5,LOW);
     }
 
     
@@ -87,6 +80,7 @@ void loop() {
       digitalWrite(A3,HIGH);
     } else {
       middle.write(0);
+      digitalWrite(A3,LOW);
     }
 
     if (i4) {
@@ -94,6 +88,7 @@ void loop() {
       digitalWrite(A1,HIGH);
     } else {
       ring.write(0);
+      digitalWrite(A1,LOW);
     }
 
      if (i5) {
@@ -101,17 +96,24 @@ void loop() {
       digitalWrite(A0,HIGH);
     } else {
       little.write(0);
+      digitalWrite(A0,LOW);
     }
 
     if (i6==2) {
       wrist.write(180);
       digitalWrite(8,HIGH);
+      digitalWrite(A4,LOW);
+      digitalWrite(A2,LOW);
     } else if (i6==1) {
       wrist.write(90);
       digitalWrite(A4,HIGH);
+      digitalWrite(8,LOW);
+      digitalWrite(A2,LOW);
     } else if (i6==0) {
       wrist.write(0);
       digitalWrite(A2,HIGH);
+      digitalWrite(A4,LOW);
+      digitalWrite(8,LOW);
     }
 
   }
